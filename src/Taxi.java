@@ -1,10 +1,10 @@
-import java.util.Optional;
-
 public class Taxi extends Vehicle {
 
     private final int STANDARD_FARE = 30;
 
-
+    // Should be refactored to something that describes a point in space.
+    // like an object with an x and y coordinate that can be compared for
+    // distance. locations could be put in a hashmap
     private String location;
     private String destination;
     private Passenger passenger;

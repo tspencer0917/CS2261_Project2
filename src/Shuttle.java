@@ -5,7 +5,7 @@ public class Shuttle extends Vehicle {
     private static final int DEFAULT_CAPACITY = 15;
     private final int passengerCapacity;
     private final LinkedHashMap<String, Integer> stops = new LinkedHashMap<>();
-    private HashSet<Passenger> passengers = new HashSet<>();
+    private final HashSet<Passenger> passengers = new HashSet<>();
 
     public Shuttle(String licensePlate) {
         this(licensePlate, DEFAULT_CAPACITY);
@@ -27,6 +27,7 @@ public class Shuttle extends Vehicle {
                 && this.stops.containsKey(passenger.getLocation());
     }
 
+    // Loops through every stop from the position
     @Override
     public int getFareFor(Passenger passenger) {
         boolean passedStart = false, passedEnd = false;
@@ -38,9 +39,12 @@ public class Shuttle extends Vehicle {
                 } else if (passedStart & passedEnd) {
                     break;
                 }
-                passedEnd =
+                // || with itself keeps it true once flipped
+                passedEnd = passedEnd ||
                         (entry.getKey().equals(passenger.getDestination()) &&
-                                passedStart) || passedEnd;
+                                passedStart);
+
+                // || with itself keeps it true once flipped
                 passedStart = passedStart ||
                         entry.getKey().equals(passenger.getLocation());
             }
