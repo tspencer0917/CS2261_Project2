@@ -3,6 +3,7 @@ import java.util.Objects;
 public class Passenger {
 
     private final String name;
+    private boolean pickedUp;
     private String location;
     private String destination;
 
@@ -10,6 +11,7 @@ public class Passenger {
         this.name = name;
         this.location = location;
         this.destination = destination;
+        this.pickedUp = false;
     }
 
     public String getLocation() {
@@ -35,5 +37,9 @@ public class Passenger {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public void book(Vehicle vehicle) {
+        vehicle.assign(this);
     }
 }

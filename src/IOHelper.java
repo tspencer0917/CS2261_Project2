@@ -1,6 +1,5 @@
-import java.util.HashSet;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class IOHelper {
 
@@ -170,5 +169,21 @@ public class IOHelper {
 
     public static boolean startWithIgnoreCase(String string, String prefix) {
         return string.substring(0, prefix.length()).equalsIgnoreCase(prefix);
+    }
+
+    public static boolean confirmBooking(Vehicle vehicle) {
+        return promptForBinaryChoice("Confirm booking for %s %s? [Y/N]: ".formatted(vehicle.getClass().getName().toLowerCase(), vehicle.getLicensePlate()), "Y", "N");
+    }
+
+    public static Optional<Vehicle> promptForLicensePlate(HashMap<String,
+            CabCompany> cabCompanies) {
+        System.out.print("Enter license plate number of vehicle: ");
+        return cabCompanies
+                .values()
+                .stream()
+                .flatMap(c -> Stream.concat(c.getShuttles(), c.getTaxis()))
+                .filter(vehicle -> vehicle.getLicensePlate()
+                        .equals(new Scanner(System.in).nextLine())
+                ).findAny();
     }
 }

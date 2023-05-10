@@ -52,4 +52,29 @@ public class Shuttle extends Vehicle {
         return fare;
     }
 
+    @Override
+    public void assign(Passenger passenger) {
+        // There should be separate collections of passengers that are on the
+        // shuttle and anticipated passengers. anticipated passengers should
+        // probably be a hashmap<Location, Passenger[]> or something like that.
+        // We're just going to pretend that this makes sense for now.
+        passengers.add(passenger);
+    }
+
+    @Override
+    public boolean isFull() {
+        return passengers.size() <= passengerCapacity;
+    }
+
+    @Override
+    public String getDestination() {
+        Iterator<String> iter = this.stops.keySet().iterator();
+        while(iter.hasNext()) {
+            if (iter.next().equals(this.getLocation()) && iter.hasNext()) {
+                return iter.next();
+            }
+        }
+            return this.stops.keySet().stream().findFirst().get();
+    }
+
 }

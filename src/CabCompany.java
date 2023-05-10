@@ -14,10 +14,12 @@ public class CabCompany {
     }
 
     public void addTaxis(HashSet<Taxi> taxis) {
+        taxis.forEach(taxi -> taxi.setLocation("%s's Garage".formatted(this.name)));
         this.taxis.addAll(taxis);
     }
 
     public void addShuttles(HashSet<Shuttle> shuttles) {
+        shuttles.forEach(shuttle -> shuttle.setLocation("%s's Garage".formatted(this.name)));
         this.shuttles.addAll(shuttles);
     }
 

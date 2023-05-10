@@ -5,7 +5,6 @@ public class Taxi extends Vehicle {
     // Should be refactored to something that describes a point in space.
     // like an object with an x and y coordinate that can be compared for
     // distance. locations could be put in a hashmap
-    private String location;
     private String destination;
     private Passenger passenger;
     private int fare;
@@ -14,6 +13,10 @@ public class Taxi extends Vehicle {
         super(licensePlate);
         this.passenger = null;
         this.fare = STANDARD_FARE;
+    }
+
+    public String getDestination() {
+        return this.destination;
     }
 
     @Override
@@ -29,7 +32,19 @@ public class Taxi extends Vehicle {
         return fare;
     }
 
-    public String getDestination() {
-        return this.destination;
+    @Override
+    public void assign(Passenger passenger) {
+        this.passenger = passenger;
+        this.setDestination(passenger.getLocation());
+    }
+
+    @Override
+    public boolean isFull() {
+        return this.passenger != null;
+    }
+
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }

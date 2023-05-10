@@ -13,7 +13,7 @@ public abstract class Vehicle {
         return location;
     }
 
-    public void goTo(String location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -24,6 +24,8 @@ public abstract class Vehicle {
     public abstract boolean isAvailableTo(Passenger passenger);
 
     public abstract int getFareFor(Passenger passenger);
+
+    public abstract void assign(Passenger passenger);
 
     @Override
     public boolean equals(Object o) {
@@ -41,4 +43,8 @@ public abstract class Vehicle {
     public int hashCode() {
         return Objects.hash(licensePlate);
     }
+
+    public abstract boolean isFull();
+
+    public abstract String getDestination();
 }

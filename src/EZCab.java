@@ -24,22 +24,55 @@ public class EZCab {
                 case 3 -> {
                     Passenger passenger = IOHelper.promptForPassengerInfo();
                     Taxi taxi =
-                            (Taxi) findAvailableVehicle(passenger, getAllTaxis())
+                            (Taxi) findAvailableVehicle(passenger,
+                                    getAllTaxis())
                                     .orElse(null);
                     Shuttle shuttle =
-                            (Shuttle) findAvailableVehicle(passenger, getAllShuttles())
+                            (Shuttle) findAvailableVehicle(passenger,
+                                    getAllShuttles())
                                     .orElse(null);
-                    IOHelper.printTaxiAndShuttleOptions(passenger, taxi, shuttle);
-                    //TODO: Prompt to book a taxi
-
+                    IOHelper.printTaxiAndShuttleOptions(passenger, taxi,
+                            shuttle);
+                    if (taxi == null && shuttle == null) {
+                        System.out.println("Sorry, there are no available " +
+                                "rides. Try again later.");
+                        continue;
+                    } else if (taxi != null && IOHelper.confirmBooking(taxi)) {
+                        taxi.assign(passenger);
+                    } else if (shuttle != null && IOHelper.confirmBooking(shuttle)) {
+                        passenger.book(shuttle);
+                    } else {
+                        Vehicle vehicleToBook = IOHelper.promptForBinaryChoice(
+                                "Taxi or Shuttle? [T/S]: ", "T", "S")
+                                ? taxi : shuttle;
+                        assert vehicleToBook != null;
+                        IOHelper.confirmBooking(vehicleToBook);
+                    }
                 }
                 case 4 -> {
-                    // TODO: Implement option 4 "Show status of Taxi"
+                    Vehicle vehicleToCheck =
+                            IOHelper.promptForLicensePlate(cabCompanies).orElse(null);
+                    if (vehicleToCheck != null) {
+                        System.out.printf(
+                                """
+                                        Vehicle: %s
+                                        Location: %s
+                                        Destination: %s
+                                        Status: %s
+                                        %n""", vehicleToCheck.getLicensePlate(),
+                        vehicleToCheck.getLocation(),
+                        vehicleToCheck.getDestination(),
+                        (vehicleToCheck.isFull() ?
+                                "No space available" :
+                                "Space available"));
+                    } else {
+                        System.out.println("We don't have a record of that vehicle");
+                    }
                 }
                 default -> System.out.println("That is not a valid option");
             }
             System.out.println();
-        } while(IOHelper.promptForBinaryChoice(
+        } while (IOHelper.promptForBinaryChoice(
                 "Would you like to return to the main menu? [Y/N]", "Y", "N"));
     }
 
@@ -53,7 +86,8 @@ public class EZCab {
 
     private static Optional<Vehicle> findAvailableVehicle(Passenger passenger,
                                                           Stream<Vehicle> vehicles) {
-        return vehicles.filter(vehicle -> vehicle.isAvailableTo(passenger)).findAny();
+        return vehicles.filter(vehicle -> vehicle.isAvailableTo(passenger))
+                .findAny();
     }
 
     private static CabCompany findOrAddCabCompany(CabCompany company) {
