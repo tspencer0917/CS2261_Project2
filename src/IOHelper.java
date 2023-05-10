@@ -180,12 +180,12 @@ public class IOHelper {
     public static Optional<Vehicle> promptForLicensePlate(HashMap<String,
             CabCompany> cabCompanies) {
         System.out.print("Enter license plate number of vehicle: ");
+        String licensePlate = new Scanner(System.in).nextLine();
         return cabCompanies
                 .values()
                 .stream()
                 .flatMap(c -> Stream.concat(c.getShuttles(), c.getTaxis()))
-                .filter(vehicle -> vehicle.getLicensePlate()
-                        .equals(new Scanner(System.in).nextLine())
-                ).findAny();
+                .filter(v -> v.getLicensePlate().equals(licensePlate))
+                .findAny();
     }
 }
