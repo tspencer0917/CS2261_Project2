@@ -1,11 +1,9 @@
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class CabCompany {
 
-    private static final int SHUTTLE_CAPACITY = 15;
     private final String name;
     HashSet<Taxi> taxis = new HashSet<>();
     HashSet<Shuttle> shuttles = new HashSet<>();

@@ -5,14 +5,13 @@ import java.util.Scanner;
 public class IOHelper {
 
     static int promptForMenuSelection() {
-        Scanner scanner = new Scanner(System.in);
         System.out.print("""
-                    Select from the menu.
-                    1. Add taxis
-                    2. Add shuttles
-                    3. Book a taxi
-                    4. Show Taxi Status
-                    """);
+                Select from the menu.
+                1. Add taxis
+                2. Add shuttles
+                3. Book a taxi
+                4. Show Taxi Status
+                """);
         return promptForIntBetween(1, 4,
                 "Enter a selection: ",
                 "That is not a valid selection");
@@ -22,6 +21,55 @@ public class IOHelper {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter company name: ");
         return new CabCompany(scanner.nextLine());
+    }
+
+    static HashSet<Taxi> promptForTaxis() {
+        int numberOfTaxis = promptForPositiveInt(
+                "How many taxis do you want to add?\n",
+                "That is not a valid number of taxis"
+        );
+        System.out.println("Enter taxi plate numbers:");
+        Scanner scanner = new Scanner(System.in);
+        HashSet<Taxi> taxis = new HashSet<>();
+        for (int i = 0; i < numberOfTaxis; i++) {
+            String licensePlate = scanner.nextLine();
+            taxis.add(new Taxi(licensePlate));
+        }
+        return taxis;
+    }
+
+    static HashSet<Shuttle> promptForShuttles() {
+        Scanner scanner = new Scanner(System.in);
+        int numberOfShuttles = promptForPositiveInt(
+                "Enter number of Shuttles to add: ",
+                "That is not a valid number of shuttles");
+        HashSet<Shuttle> shuttles = new HashSet<>();
+        for (int i = 0; i < numberOfShuttles; i++) {
+            System.out.printf("Enter plate number for shuttle %d/%d: ", i + 1,
+                    numberOfShuttles);
+            Shuttle shuttle = new Shuttle(scanner.nextLine());
+            int numberOfStops = promptForPositiveInt("Enter number of " +
+                    "stops: ", "That is not a valid number");
+            System.out.println("Enter route stops with fare:");
+            for (int j = 0; j < numberOfStops; j++) {
+                boolean valid = false;
+                while (!valid) {
+                    String s = scanner.nextLine();
+                    if (s.matches("[a-zA-Z ]+ *: *\\$*[0-9]+")) {
+                        String[] sArr = s.split(" *: *\\$*");
+                        shuttle.addStop(sArr[0], Integer.parseInt(sArr[1]));
+                        valid = true;
+                    } else {
+                        System.out.println("""
+                                That is not valid shuttle stop description.
+                                Shuttle info must be given like "Forest Park: $15"
+                                """);
+                    }
+                }
+                shuttles.add(shuttle);
+            }
+        }
+        return shuttles;
     }
 
     static Passenger promptForPassengerInfo() {
@@ -41,7 +89,7 @@ public class IOHelper {
 
     static void printTaxiAndShuttleOptions(Passenger passenger,
                                            Taxi taxi,
-                                           Shuttle shuttle){
+                                           Shuttle shuttle) {
         System.out.println(
                 taxi != null ?
                         "Taxi %s is available, fare will be $%d".formatted(
@@ -63,44 +111,6 @@ public class IOHelper {
         );
     }
 
-    static HashSet<Taxi> promptForTaxis() {
-        int numberOfTaxis = promptForPositiveInt(
-                "How many taxis do you want to add?\n",
-                "That is not a valid number of taxis"
-        );
-        System.out.println("Enter taxi plate numbers:");
-        Scanner scanner = new Scanner(System.in);
-        HashSet<Taxi> taxis = new HashSet<>();
-        for (int i=0; i < numberOfTaxis; i++) {
-            String licensePlate = scanner.nextLine();
-            taxis.add(new Taxi(licensePlate));
-        }
-        return taxis;
-    }
-
-    static HashSet<Shuttle> promptForShuttles() {
-        Scanner scanner = new Scanner(System.in);
-        int numberOfShuttles = promptForPositiveInt(
-                "Enter number of Shuttles to add: ",
-                "That is not a valid number of shuttles");
-        HashSet<Shuttle> shuttles = new HashSet<>();
-        for (int i = 0; i < numberOfShuttles; i++) {
-            System.out.printf("Enter plate number for shuttle %d/%d: ", i+1,
-                    numberOfShuttles);
-            Shuttle shuttle = new Shuttle(scanner.nextLine());
-            int numberOfStops = promptForPositiveInt("Enter number of " +
-                    "stops: ", "That is not a valid number");
-            System.out.println("Enter route stops with fare:");
-            for (int j = 0; j < numberOfStops; j++) {
-                String s = scanner.nextLine();
-                shuttle.addStop(s.substring(0, s.indexOf(':')),
-                        Integer.parseInt(s.substring(s.indexOf(':') + 1)));
-            }
-            shuttles.add(shuttle);
-        }
-        return shuttles;
-    }
-
     static int promptForPositiveInt(String promptMsg,
                                     String failMsg) {
         while (true) {
@@ -113,6 +123,7 @@ public class IOHelper {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     static int promptForIntBetween(int min, int max,
                                    String promptMsg,
                                    String failMsg) {
@@ -139,7 +150,9 @@ public class IOHelper {
         }
     }
 
-    public static boolean promptForBinaryChoice(String promptMsg, String affirmStr, String negStr) {
+    public static boolean promptForBinaryChoice(String promptMsg,
+                                                String affirmStr,
+                                                String negStr) {
         Scanner scanner = new Scanner(System.in);
         boolean isAffirm, isNeg;
         do {
@@ -147,9 +160,11 @@ public class IOHelper {
             String input = scanner.nextLine();
             isAffirm = startWithIgnoreCase(input, affirmStr);
             isNeg = startWithIgnoreCase(input, negStr);
-            if(isAffirm || isNeg) { break; }
+            if (isAffirm || isNeg) {
+                break;
+            }
             System.out.println("That is not a valid option");
-        } while(true);
+        } while (true);
         return isAffirm;
     }
 
