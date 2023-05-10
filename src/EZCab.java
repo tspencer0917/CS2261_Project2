@@ -37,9 +37,9 @@ public class EZCab {
                         System.out.println("Sorry, there are no available " +
                                 "rides. Try again later.");
                         continue;
-                    } else if (taxi != null && IOHelper.confirmBooking(taxi)) {
+                    } else if (shuttle == null && IOHelper.confirmBooking(taxi)) {
                         taxi.assign(passenger);
-                    } else if (shuttle != null && IOHelper.confirmBooking(shuttle)) {
+                    } else if (taxi == null && IOHelper.confirmBooking(shuttle)) {
                         passenger.book(shuttle);
                     } else {
                         Vehicle vehicleToBook = IOHelper.promptForBinaryChoice(
@@ -73,7 +73,7 @@ public class EZCab {
             }
             System.out.println();
         } while (IOHelper.promptForBinaryChoice(
-                "Would you like to return to the main menu? [Y/N]", "Y", "N"));
+                "Would you like to return to the main menu? [Y/N]: ", "Y", "N"));
     }
 
     private static Stream<Vehicle> getAllTaxis() {

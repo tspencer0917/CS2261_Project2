@@ -5,11 +5,11 @@ public class IOHelper {
 
     static int promptForMenuSelection() {
         System.out.print("""
-                Select from the menu.
+                Main menu:
                 1. Add taxis
                 2. Add shuttles
-                3. Book a taxi
-                4. Show Taxi Status
+                3. Book a ride
+                4. Show vehicle status
                 """);
         return promptForIntBetween(1, 4,
                 "Enter a selection: ",
@@ -44,6 +44,7 @@ public class IOHelper {
                 "That is not a valid number of shuttles");
         HashSet<Shuttle> shuttles = new HashSet<>();
         for (int i = 0; i < numberOfShuttles; i++) {
+            //TODO: Implement input validation for license plates
             System.out.printf("Enter plate number for shuttle %d/%d: ", i + 1,
                     numberOfShuttles);
             Shuttle shuttle = new Shuttle(scanner.nextLine());
@@ -54,7 +55,7 @@ public class IOHelper {
                 boolean valid = false;
                 while (!valid) {
                     String s = scanner.nextLine();
-                    if (s.matches("[a-zA-Z ]+ *: *\\$*[0-9]+")) {
+                    if (s.matches("[a-zA-Z0-9 ]+ *: *\\$*[0-9]+")) {
                         String[] sArr = s.split(" *: *\\$*");
                         shuttle.addStop(sArr[0], Integer.parseInt(sArr[1]));
                         valid = true;
@@ -168,7 +169,8 @@ public class IOHelper {
     }
 
     public static boolean startWithIgnoreCase(String string, String prefix) {
-        return string.substring(0, prefix.length()).equalsIgnoreCase(prefix);
+        return string.length() >= prefix.length() &&
+                string.substring(0, prefix.length()).equalsIgnoreCase(prefix);
     }
 
     public static boolean confirmBooking(Vehicle vehicle) {

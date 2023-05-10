@@ -6,6 +6,7 @@ public class Passenger {
     private boolean pickedUp;
     private String location;
     private String destination;
+    private Vehicle assignedVehicle;
 
     public Passenger(String name, String location, String destination) {
         this.name = name;
@@ -41,5 +42,6 @@ public class Passenger {
 
     public void book(Vehicle vehicle) {
         vehicle.assign(this);
+        this.assignedVehicle = vehicle;
     }
 }
